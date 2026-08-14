@@ -4,12 +4,12 @@
 [![npm](https://img.shields.io/npm/v/deferless.svg)](https://www.npmjs.com/package/deferless)
 [![licence: MIT](https://img.shields.io/badge/licence-MIT-blue.svg)](LICENSE)
 [![dependencies: 0](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](package.json)
-[![StillShipping](https://toolproof.kynth.studio/badge/stillshipping/kyisaiah47/deferless.svg)](https://stillshipping.kynth.studio)
 [![AGENTS.md](https://toolproof.kynth.studio/badge/rulestack/kyisaiah47/deferless.svg)](https://rulestack.kynth.studio)
 
-<sub>The last two are live third-party measurements and read grey **unknown** until their nightly
-crawlers reach a repository this new. That is the point: an unmeasured subject renders as
-unmeasured, never as a pass. Same rule as [exit code 2](docs/PRINCIPLES.md).</sub>
+<sub>The last one is a live third-party score of this repo's [AGENTS.md](AGENTS.md), re-read
+nightly. Until that crawl reaches a repository this new it reads **not indexed** — which is the
+correct output and not a bad one. An unmeasured subject renders as unmeasured, never as a pass;
+same rule as [exit code 2](docs/PRINCIPLES.md).</sub>
 
 **Fail-closed gates for work an AI agent did on your behalf.** A plan it cannot quietly deviate
 from, and findings it cannot defer to you.
