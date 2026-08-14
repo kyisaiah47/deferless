@@ -19,6 +19,12 @@ ok()   { echo "  ok    $1"; PASS=$((PASS+1)); }
 bad()  { echo "  FAIL  $1"; FAIL=$((FAIL+1)); }
 check(){ if [ "$2" = "$3" ]; then ok "$1"; else bad "$1 (got [$2], want [$3])"; fi; }
 
+# Same BSD-vs-GNU stat split the library has, and for the same reason: `stat -f %m` on GNU reads
+# %m as a filename, prints filesystem info on stdout, and exits non-zero — so a `||` chain returns
+# that junk PLUS the fallback. Decide the dialect once.
+if stat -c %Y . >/dev/null 2>&1; then T_STAT="stat -c %Y"; else T_STAT="stat -f %m"; fi
+t_mtime() { $T_STAT "$1" 2>/dev/null || echo 0; }
+
 mkfake() { # mkfake <shell> <path> <repo>
   cat > "$2" <<EOF
 #!$1
@@ -72,7 +78,12 @@ for SH in /bin/bash /bin/zsh; do
     sleep 0.5
   done
   if [ -z "$PEER" ]; then
-    bad "could not allocate a pty-backed fake peer — tests 3-5 skipped"
+    #    ⛔ Still a FAILURE, never a skip: "I could not build the peer" is not "there was no
+    #    problem". And kill the helper anyway — a `script` left running holds a pty, and enough
+    #    leaked ones exhaust the machine's pty table, at which point every later run of this file
+    #    reports the same thing for a reason that has nothing to do with the gate.
+    kill "$SCRIPT_PID" 2>/dev/null; wait "$SCRIPT_PID" 2>/dev/null
+    bad "could not allocate a pty-backed fake peer — tests 3-6 could not run"
   else
     : > "$D/socks/$PEER.sock"
     mkdir -p "$D/home/session-activity"; : > "$D/home/session-activity/$PEER"
@@ -117,7 +128,7 @@ EOF
   wait
   grep -q "LOCK-VANISHED-ON-ACQUIRE" "$D/slow.out" && bad "lock not deleted by its own trap" || ok "lock not deleted by its own trap"
   s_out=$(sed -n 's/SLOW-OUT //p' "$D/slow.out")
-  f_at=$(stat -f %m "$D/fast.out" 2>/dev/null || stat -c %Y "$D/fast.out")
+  f_at=$(t_mtime "$D/fast.out")
   [ "$f_at" -ge "$s_out" ] && ok "second deploy waited for the first" || bad "second deploy waited for the first"
 
   # 7. Lock released after the holder exits.
@@ -175,7 +186,7 @@ set -uo pipefail
 . "$LIB"
 deploy_gate demo-hb
 sleep 26
-echo "HB-AGE \$(( \$(date +%s) - \$(stat -f %m "$D/home/deploy.lock/heartbeat" 2>/dev/null || stat -c %Y "$D/home/deploy.lock/heartbeat") ))"
+echo "HB-AGE \$(( \$(date +%s) - \$($T_STAT "$D/home/deploy.lock/heartbeat") ))"
 EOF
   chmod +x "$D/repo/scripts/deploy.sh"
   ( cd "$D/repo" && ./scripts/deploy.sh > "$D/hb.out" 2>/dev/null ) &

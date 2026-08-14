@@ -72,11 +72,25 @@ _dl_now() { date +%s; }
 _dl_stamp() { date '+%Y-%m-%d %H:%M:%S'; }
 _dl_say() { echo "[deploy-gate] $*" >&2; }
 _dl_log() { echo "$(_dl_stamp) $*" >> "$DEFERLESS_DEPLOY_LOG" 2>/dev/null || true; }
+# ── MTIME, AND WHY THIS IS NOT A ONE-LINE `||` CHAIN ─────────────────────────────────────────
 # BSD stat (macOS) and GNU stat (Linux) spell this differently and neither accepts the other's
-# flag. Try BSD first, then GNU, then 0 — and 0 is the safe direction here: an unreadable mtime
-# reads as "ancient", which makes a lock look stealable and a session look idle. Both of those
-# are recoverable; the opposite default would wedge a deploy behind a stamp nobody can read.
-_dl_mtime() { stat -f %m "$1" 2>/dev/null || stat -c %Y "$1" 2>/dev/null || echo 0; }
+# flag. The obvious `stat -f %m "$1" || stat -c %Y "$1"` is WRONG on GNU and fails in the worst
+# way available: GNU's `-f` means "filesystem status" and takes no format, so it reads `%m` as a
+# FILENAME. It then prints a whole block of filesystem info for the real file ON STDOUT, exits
+# non-zero because `%m` does not exist, and the fallback runs and appends to it. The caller gets
+# fifteen lines where it expected an integer, every numeric comparison errors, and every peer
+# reads as idle — so a deploy that should have deferred shipped instead. Green locally, wrong on
+# every Linux runner.
+#
+# So the dialect is decided ONCE, up front, by a probe whose output is discarded.
+if stat -c %Y . >/dev/null 2>&1; then
+    # 0 is the safe direction for an unreadable stamp: it reads as "ancient", which makes a lock
+    # look stealable and a session look idle. Both are recoverable; the opposite default wedges a
+    # deploy behind a stamp nobody can read.
+    _dl_mtime() { stat -c %Y "$1" 2>/dev/null || echo 0; }   # GNU
+else
+    _dl_mtime() { stat -f %m "$1" 2>/dev/null || echo 0; }   # BSD
+fi
 _dl_alive() { [ -n "${1:-}" ] && kill -0 "$1" 2>/dev/null; }
 
 # ── SESSIONS ────────────────────────────────────────────────────────────────
