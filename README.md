@@ -1,6 +1,7 @@
 # deferless
 
 [![gates](https://github.com/kyisaiah47/deferless/actions/workflows/ci.yml/badge.svg)](https://github.com/kyisaiah47/deferless/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/deferless.svg)](https://www.npmjs.com/package/deferless)
 [![licence: MIT](https://img.shields.io/badge/licence-MIT-blue.svg)](LICENSE)
 [![dependencies: 0](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](package.json)
 [![StillShipping](https://toolproof.kynth.studio/badge/stillshipping/kyisaiah47/deferless.svg)](https://stillshipping.kynth.studio)
