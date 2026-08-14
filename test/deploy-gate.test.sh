@@ -53,16 +53,24 @@ for SH in /bin/bash /bin/zsh; do
   #    keep things looking busy forever. `script` allocates a pty for its child, which is the
   #    only cheap way to produce a process that looks like an operator's terminal tab. The
   #    test harness itself has no tty, so faking the peer as $$ tested nothing.
-  # A pty is the only cheap way to make a process that looks like an operator's terminal tab.
-  # BSD `script` takes the file then the command; GNU takes -c command then the file.
+  #    BSD `script` takes the file then the command; GNU takes -c command then the file.
+  #    The peer holds its pty for far longer than tests 3-6 need and is killed explicitly at 6.
+  #    It used to be 25s, which is plenty on an idle machine and NOT plenty on a loaded one:
+  #    the peer died mid-block, four tests failed, and a re-run passed. A flaky gate is a gate
+  #    that gets ignored, so the budget is now wide enough that expiry means a real hang.
   if script -q /dev/null true >/dev/null 2>&1; then
-    script -q /dev/null sh -c 'sleep 25' >/dev/null 2>&1 &
+    script -q /dev/null sh -c 'sleep 300' >/dev/null 2>&1 &
   else
-    script -q -c 'sleep 25' /dev/null >/dev/null 2>&1 &
+    script -q -c 'sleep 300' /dev/null >/dev/null 2>&1 &
   fi
   SCRIPT_PID=$!
-  sleep 1
-  PEER=$(ps -eo pid,ppid,tty,command | awk -v s="$SCRIPT_PID" '$2==s && $3!="??" {print $1}' | head -1)
+  #    Poll for the pty child rather than assuming it exists after a fixed second.
+  PEER=""
+  for _i in 1 2 3 4 5 6 7 8 9 10; do
+    PEER=$(ps -eo pid,ppid,tty,command | awk -v s="$SCRIPT_PID" '$2==s && $3!="??" {print $1}' | head -1)
+    [ -n "$PEER" ] && break
+    sleep 0.5
+  done
   if [ -z "$PEER" ]; then
     bad "could not allocate a pty-backed fake peer — tests 3-5 skipped"
   else
