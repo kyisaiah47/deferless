@@ -1,5 +1,9 @@
 # deferless
 
+[![gates](https://github.com/kyisaiah47/deferless/actions/workflows/ci.yml/badge.svg)](https://github.com/kyisaiah47/deferless/actions/workflows/ci.yml)
+[![licence: MIT](https://img.shields.io/badge/licence-MIT-blue.svg)](LICENSE)
+[![dependencies: 0](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](package.json)
+
 **Fail-closed gates for work an AI agent did on your behalf.** A plan it cannot quietly deviate
 from, and findings it cannot defer to you.
 
@@ -252,6 +256,23 @@ New check kinds are the most useful contribution — see [CONTRIBUTING.md](CONTR
 rule governs every patch: **nothing may be added that lets a known failure ship.** No `--force`,
 no allowlist, no known-issues file, no "warn instead of fail" toggle on an existing check. If a
 check is wrong, fix the check in the open. See [docs/PRINCIPLES.md](docs/PRINCIPLES.md).
+
+## The defect class these were built for, counted
+
+If you want a number for how often the *"the rule exists, everything builds, nothing errors, and
+the only detector is a human who happens to look"* failure actually happens: a census published
+the same week as this repo measured **445,348 published Claude Code artefacts and found 43,199 of
+them fail a structural check** — 88.4% of those a YAML block that does not parse. Nothing in the
+publishing path checks it.
+
+- [The census](https://toolproof.kynth.studio/census) · dataset DOI
+  [10.5281/zenodo.21936490](https://doi.org/10.5281/zenodo.21936490), CC BY 4.0
+- [Measurement vocabulary](https://toolproof.kynth.studio/methodology/vocabulary) — load rate,
+  drift, shipping status, skill decay
+- [Toolproof](https://toolproof.kynth.studio) — the indexes the census is drawn from
+
+Both halves are the same problem seen from opposite ends. The census counts artefacts that were
+published broken. These gates are what refusing to publish one looks like.
 
 ## Licence
 
