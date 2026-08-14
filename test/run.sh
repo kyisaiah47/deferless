@@ -24,7 +24,17 @@ exits() {
 
 EX=examples/api-docs
 SPEC=$EX/plan.spec.json
-TMP=$(mktemp -d -t deferless-test)
+TMP=$(mktemp -d "${TMPDIR:-/tmp}/deferless-test.XXXXXX")
+# ⛔ THE SUITE'S OWN VERSION OF THE BUG IT TESTS FOR. `mktemp -d -t name` is a BSD spelling that
+# GNU mktemp rejects, so on Linux TMP came back EMPTY, every fixture path became "/empty.json",
+# every write was denied — and four checks still printed `ok`, because plan-gate correctly exited
+# 2 on a spec file that did not exist. The suite reported passes for tests that never ran.
+# A precondition that cannot be met is not a reason to keep going and score the results.
+if [ -z "$TMP" ] || [ ! -d "$TMP" ] || ! touch "$TMP/.w" 2>/dev/null; then
+  echo "cannot create a writable temp dir (got '${TMP:-empty}') — refusing to score a run that cannot set up"
+  exit 2
+fi
+rm -f "$TMP/.w"
 trap 'rm -rf "$TMP"' EXIT
 
 echo "== plan-gate =="

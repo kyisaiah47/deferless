@@ -12,7 +12,7 @@ set -uo pipefail
 
 LIB="$(cd "$(dirname "$0")/.." && pwd)/sh/deploy-lock.sh"
 [ -f "$LIB" ] || { echo "cannot find sh/deploy-lock.sh next to this test"; exit 2; }
-TMP=$(mktemp -d -t deploygate)
+TMP=$(mktemp -d "${TMPDIR:-/tmp}/deploygate.XXXXXX")
 trap 'rm -rf "$TMP"' EXIT
 PASS=0; FAIL=0
 ok()   { echo "  ok    $1"; PASS=$((PASS+1)); }
@@ -53,7 +53,13 @@ for SH in /bin/bash /bin/zsh; do
   #    keep things looking busy forever. `script` allocates a pty for its child, which is the
   #    only cheap way to produce a process that looks like an operator's terminal tab. The
   #    test harness itself has no tty, so faking the peer as $$ tested nothing.
-  script -q /dev/null sh -c 'sleep 25' >/dev/null 2>&1 &
+  # A pty is the only cheap way to make a process that looks like an operator's terminal tab.
+  # BSD `script` takes the file then the command; GNU takes -c command then the file.
+  if script -q /dev/null true >/dev/null 2>&1; then
+    script -q /dev/null sh -c 'sleep 25' >/dev/null 2>&1 &
+  else
+    script -q -c 'sleep 25' /dev/null >/dev/null 2>&1 &
+  fi
   SCRIPT_PID=$!
   sleep 1
   PEER=$(ps -eo pid,ppid,tty,command | awk -v s="$SCRIPT_PID" '$2==s && $3!="??" {print $1}' | head -1)
@@ -103,7 +109,7 @@ EOF
   wait
   grep -q "LOCK-VANISHED-ON-ACQUIRE" "$D/slow.out" && bad "lock not deleted by its own trap" || ok "lock not deleted by its own trap"
   s_out=$(sed -n 's/SLOW-OUT //p' "$D/slow.out")
-  f_at=$(stat -f %m "$D/fast.out")
+  f_at=$(stat -f %m "$D/fast.out" 2>/dev/null || stat -c %Y "$D/fast.out")
   [ "$f_at" -ge "$s_out" ] && ok "second deploy waited for the first" || bad "second deploy waited for the first"
 
   # 7. Lock released after the holder exits.
@@ -161,7 +167,7 @@ set -uo pipefail
 . "$LIB"
 deploy_gate demo-hb
 sleep 26
-echo "HB-AGE \$(( \$(date +%s) - \$(stat -f %m "$D/home/deploy.lock/heartbeat") ))"
+echo "HB-AGE \$(( \$(date +%s) - \$(stat -f %m "$D/home/deploy.lock/heartbeat" 2>/dev/null || stat -c %Y "$D/home/deploy.lock/heartbeat") ))"
 EOF
   chmod +x "$D/repo/scripts/deploy.sh"
   ( cd "$D/repo" && ./scripts/deploy.sh > "$D/hb.out" 2>/dev/null ) &

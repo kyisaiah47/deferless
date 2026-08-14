@@ -72,7 +72,11 @@ _dl_now() { date +%s; }
 _dl_stamp() { date '+%Y-%m-%d %H:%M:%S'; }
 _dl_say() { echo "[deploy-gate] $*" >&2; }
 _dl_log() { echo "$(_dl_stamp) $*" >> "$DEFERLESS_DEPLOY_LOG" 2>/dev/null || true; }
-_dl_mtime() { stat -f %m "$1" 2>/dev/null || echo 0; }   # BSD stat; this is a macOS-only estate
+# BSD stat (macOS) and GNU stat (Linux) spell this differently and neither accepts the other's
+# flag. Try BSD first, then GNU, then 0 — and 0 is the safe direction here: an unreadable mtime
+# reads as "ancient", which makes a lock look stealable and a session look idle. Both of those
+# are recoverable; the opposite default would wedge a deploy behind a stamp nobody can read.
+_dl_mtime() { stat -f %m "$1" 2>/dev/null || stat -c %Y "$1" 2>/dev/null || echo 0; }
 _dl_alive() { [ -n "${1:-}" ] && kill -0 "$1" 2>/dev/null; }
 
 # ── SESSIONS ────────────────────────────────────────────────────────────────
