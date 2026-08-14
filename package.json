@@ -1,0 +1,53 @@
+{
+  "name": "deferless",
+  "version": "0.1.0",
+  "description": "Fail-closed gates for work an AI agent did on your behalf: a plan it cannot quietly deviate from, and findings it cannot defer.",
+  "type": "module",
+  "bin": {
+    "deferless": "bin/deferless.mjs"
+  },
+  "files": [
+    "bin",
+    "src",
+    "sh",
+    "examples",
+    "docs",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "bash test/run.sh",
+    "demo": "node bin/deferless.mjs demo"
+  },
+  "keywords": [
+    "ai-agents",
+    "coding-agent",
+    "guardrails",
+    "ci",
+    "gate",
+    "fail-closed",
+    "claude-code",
+    "agent-ops",
+    "verification",
+    "spec"
+  ],
+  "license": "MIT",
+  "author": "Kynth Studios (https://kynth.studio)",
+  "homepage": "https://github.com/kyisaiah47/deferless#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kyisaiah47/deferless.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kyisaiah47/deferless/issues"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {},
+  "peerDependenciesMeta": {
+    "playwright": {
+      "optional": true
+    }
+  }
+}
