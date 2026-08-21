@@ -1,0 +1,60 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    {
+      "source": "/x",
+      "destination": "/?utm_source=founder-x&utm_medium=social",
+      "permanent": false
+    },
+    {
+      "source": "/kx",
+      "destination": "/?utm_source=kynth-x&utm_medium=social",
+      "permanent": false
+    },
+    {
+      "source": "/ax",
+      "destination": "/?utm_source=autopsy-x&utm_medium=social",
+      "permanent": false
+    },
+    {
+      "source": "/bs",
+      "destination": "/?utm_source=founder-bluesky&utm_medium=social",
+      "permanent": false
+    },
+    {
+      "source": "/kb",
+      "destination": "/?utm_source=kynth-bluesky&utm_medium=social",
+      "permanent": false
+    },
+    {
+      "source": "/li",
+      "destination": "/?utm_source=founder-linkedin&utm_medium=social",
+      "permanent": false
+    },
+    {
+      "source": "/kl",
+      "destination": "/?utm_source=kynth-linkedin&utm_medium=social",
+      "permanent": false
+    },
+    {
+      "source": "/pl",
+      "destination": "/?utm_source=founder-peerlist&utm_medium=social",
+      "permanent": false
+    },
+    {
+      "source": "/dv",
+      "destination": "/?utm_source=founder-devto&utm_medium=social",
+      "permanent": false
+    },
+    {
+      "source": "/kd",
+      "destination": "/?utm_source=kynth-devto&utm_medium=social",
+      "permanent": false
+    },
+    {
+      "source": "/hn",
+      "destination": "/?utm_source=kynth-hashnode&utm_medium=social",
+      "permanent": false
+    }
+  ]
+}
