@@ -55,6 +55,66 @@
       "source": "/hn",
       "destination": "/?utm_source=kynth-hashnode&utm_medium=social",
       "permanent": false
+    },
+    {
+      "source": "/th",
+      "destination": "/?utm_source=founder-threads&utm_medium=social",
+      "permanent": false
+    },
+    {
+      "source": "/kt",
+      "destination": "/?utm_source=kynth-threads&utm_medium=social",
+      "permanent": false
+    },
+    {
+      "source": "/ig",
+      "destination": "/?utm_source=founder-ig&utm_medium=social",
+      "permanent": false
+    },
+    {
+      "source": "/ki",
+      "destination": "/?utm_source=kynth-ig&utm_medium=social",
+      "permanent": false
+    },
+    {
+      "source": "/bg",
+      "destination": "/?utm_source=biasfile-ig&utm_medium=social",
+      "permanent": false
+    },
+    {
+      "source": "/ab",
+      "destination": "/?utm_source=autopsy-bluesky&utm_medium=social",
+      "permanent": false
+    },
+    {
+      "source": "/st",
+      "destination": "/?utm_source=standup-threads&utm_medium=social",
+      "permanent": false
+    },
+    {
+      "source": "/sb",
+      "destination": "/?utm_source=standup-bluesky&utm_medium=social",
+      "permanent": false
+    },
+    {
+      "source": "/at",
+      "destination": "/?utm_source=agentwire-threads&utm_medium=social",
+      "permanent": false
+    },
+    {
+      "source": "/aw",
+      "destination": "/?utm_source=agentwire-bluesky&utm_medium=social",
+      "permanent": false
+    },
+    {
+      "source": "/fx",
+      "destination": "/?utm_source=frontwire-x&utm_medium=social",
+      "permanent": false
+    },
+    {
+      "source": "/ft",
+      "destination": "/?utm_source=frontwire-threads&utm_medium=social",
+      "permanent": false
     }
   ]
 }
