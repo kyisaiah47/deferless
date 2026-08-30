@@ -13,7 +13,7 @@
     },
     {
       "source": "/ax",
-      "destination": "/?utm_source=autopsy-x&utm_medium=social",
+      "destination": "/?utm_source=ctxwindow-x&utm_medium=social",
       "permanent": false
     },
     {
@@ -83,7 +83,7 @@
     },
     {
       "source": "/ab",
-      "destination": "/?utm_source=autopsy-bluesky&utm_medium=social",
+      "destination": "/?utm_source=ctxwindow-bluesky&utm_medium=social",
       "permanent": false
     },
     {
