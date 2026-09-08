@@ -283,7 +283,7 @@ published broken. These gates are what refusing to publish one looks like.
 
 ## Licence
 
-MIT. Built and used in production by [Kynth Studios](https://kynth.studio).
+MIT. Built and used in production by [Compound Labs](https://thecompound.tech).
 
 These gates run against a live estate of ~35 products — the deviation, the deferral, the
 invisible hero, the ten-stale-builds problem and the zsh trap bug are all real incidents from it,
