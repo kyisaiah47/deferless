@@ -4,7 +4,7 @@
 [![npm](https://img.shields.io/npm/v/deferless.svg)](https://www.npmjs.com/package/deferless)
 [![licence: MIT](https://img.shields.io/badge/licence-MIT-blue.svg)](LICENSE)
 [![dependencies: 0](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](package.json)
-[![AGENTS.md](https://toolproof.kynth.studio/badge/rulestack/kyisaiah47/deferless.svg)](https://rulestack.kynth.studio)
+[![AGENTS.md](https://toolproof.thecompound.tech/badge/rulestack/kyisaiah47/deferless.svg)](https://rulestack.thecompound.tech)
 
 <sub>The last one is a live third-party score of this repo's [AGENTS.md](AGENTS.md), re-read
 nightly. Until that crawl reaches a repository this new it reads **not indexed** — which is the
@@ -272,11 +272,11 @@ the same week as this repo measured **445,348 published Claude Code artefacts an
 them fail a structural check** — 88.4% of those a YAML block that does not parse. Nothing in the
 publishing path checks it.
 
-- [The census](https://toolproof.kynth.studio/census) · dataset DOI
+- [The census](https://toolproof.thecompound.tech/census) · dataset DOI
   [10.5281/zenodo.21936490](https://doi.org/10.5281/zenodo.21936490), CC BY 4.0
-- [Measurement vocabulary](https://toolproof.kynth.studio/methodology/vocabulary) — load rate,
+- [Measurement vocabulary](https://toolproof.thecompound.tech/methodology/vocabulary) — load rate,
   drift, shipping status, skill decay
-- [Toolproof](https://toolproof.kynth.studio) — the indexes the census is drawn from
+- [Toolproof](https://toolproof.thecompound.tech) — the indexes the census is drawn from
 
 Both halves are the same problem seen from opposite ends. The census counts artefacts that were
 published broken. These gates are what refusing to publish one looks like.
