@@ -121,7 +121,7 @@ function probeText() {
    *
    * Tailwind v4 emits modern colour syntax. `text-white/70` computes to
    * `oklab(0.999994 0.0000455677 0.0000200868 / 0.7)`, which is white at 70%
-   * and was being measured as pure black. On parserail.kynth.studio/endpoints
+   * and was being measured as pure black. On parserail.thecompound.tech/endpoints
    * that produced 106 findings at 1.06:1 and 1.11:1 — on a page that is white
    * text on near-black and completely legible in a screenshot. Every finding on
    * every Tailwind-v4 surface in this estate was affected, and the ratios were
@@ -273,7 +273,7 @@ function probeText() {
      *
      * Chrome puts `content-visibility: hidden` on `::details-content` rather than `display: none`
      * — deliberately, so the disclosure can be animated open. The consequence is that the subtree
-     * keeps a box: measured 2026-08-06 on parserail.kynth.studio, the closed phone-nav sheet
+     * keeps a box: measured 2026-08-06 on parserail.thecompound.tech, the closed phone-nav sheet
      * reported 40x379 at x=321 and every link inside it 4px wide, so "Get your key" measured as
      * three wrapped lines. Twenty-four WRAP findings across four viewports, on a control the
      * reader cannot see and cannot click until they open the menu.
@@ -324,10 +324,10 @@ function probeText() {
      * samples the OVERLAY's pixels and can clear a genuine failure, and a text run the reader
      * cannot see at all gets judged as though they were reading it.
      *
-     * MEASURED, 2026-08-06, kynth.studio: the apex opens behind a full-viewport `.cover-root`
+     * MEASURED, 2026-08-06, thecompound.tech: the apex opens behind a full-viewport `.cover-root`
      * index strip on a white plate, which folds away on a drag or a click. `hero-contrast.mjs`
      * sampled the top band with the cover still up and reported 41 failures — every white hero
-     * run at 1.12:1, "Zero to One", "Kynth Studios", the whole nav — none of them real. It was
+     * run at 1.12:1, "Zero to One", "Compound Labs", the whole nav — none of them real. It was
      * measuring white ink against the white sheet lying on top of it.
      *
      * `elementFromPoint` at the run's own centre is the cheap, exact answer: whatever the
@@ -442,7 +442,7 @@ function probeText() {
      * the foreground still comes from `color` — and under `difference` the foreground is the one
      * that got inverted.
      *
-     * MEASURED, 2026-08-06, kynth.studio: the cover's `<nav>` carries `mix-blend-mode:
+     * MEASURED, 2026-08-06, thecompound.tech: the cover's `<nav>` carries `mix-blend-mode:
      * difference` — a good decision, it keeps one nav legible over both the white plate and the
      * dark cards that scroll under it. Its links are `color: #fff` over a `#fff` page, so the
      * walk scored all seven at 1:1, white on white, the most alarming number this gate can
@@ -469,7 +469,7 @@ function probeText() {
        * value that never reaches a pixel. `getComputedStyle` reports it regardless, because
        * "computed" is a cascade term, not a paint term.
        *
-       * Measured 2026-08-06 on parserail.kynth.studio: ONE element, the vendored capture's page
+       * Measured 2026-08-06 on parserail.thecompound.tech: ONE element, the vendored capture's page
        * root, `display: contents` with `background: rgb(255,255,255)` inherited from the
        * template's light-mode default. The walk stopped there and scored every heading on the
        * page as white-on-white and every body run as grey-on-white — 66 of that host's 93
@@ -1621,7 +1621,7 @@ async function run(url, opts) {
      * which is a different set of advance widths from the face that ships. Every check that
      * depends on how wide a string is inherits that: WRAP most directly, then OVERFLOW, then FOLD.
      *
-     * MEASURED, 2026-08-06, kynth.studio: the sweep reported the "Send the brief" CTA on THREE
+     * MEASURED, 2026-08-06, thecompound.tech: the sweep reported the "Send the brief" CTA on THREE
      * lines at 320, 375, 414 and 768 — four hard failures. Re-run against the same unchanged page
      * with the faces loaded: zero, at all four widths. The pill has never wrapped. Four findings
      * on a defect that does not exist, and the site's own display face (BDO Grotesk) is narrower
@@ -2064,7 +2064,7 @@ const opts = {
 /* ── WHICH PAGES GET MEASURED ─────────────────────────────────────────────────────────────────
  *
  * ⛔ IT USED TO BE EXACTLY ONE, AND ALWAYS THE HOMEPAGE. Audited 2026-08-13: all twelve products
- * that vendor this gate invoke it as `render-gate.mjs "https://<slug>.kynth.studio/"` and nothing
+ * that vendor this gate invoke it as `render-gate.mjs "https://<slug>.thecompound.tech/"` and nothing
  * else. So check G — the nested-scroll wheel probe, the one written after a horizontal-only
  * scroller was found eating the whole gesture — has never measured a single interior page, and
  * interior pages are where the scrollers live. StackTab's chip rail and its widest price tables
