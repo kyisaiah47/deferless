@@ -1,6 +1,6 @@
 {
   "name": "deferless",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Fail-closed gates for work an AI agent did on your behalf: a plan it cannot quietly deviate from, and findings it cannot defer.",
   "type": "module",
   "bin": {
