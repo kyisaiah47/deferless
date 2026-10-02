@@ -1,0 +1,80 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>shipprobe fixtures: a page that passes every rule</title>
+<!-- A copy of shipprobe's test/fixtures/page/clean.html, served as its own front page.
+     test/run.sh runs `deferless render <this file> --shots <dir>` on it and needs exit 0.
+     Every rule in the tool runs against this page and finds nothing. It wears the front page's
+     nav and footer, its prose uses the width the page establishes, its capture is dense enough to
+     study, its numbers sit inside sentences, its table compares three things across four columns,
+     and its copy says what the thing does. -->
+<style>
+  *,*::before,*::after{box-sizing:border-box}
+  body{margin:0;font:16px/1.6 system-ui,sans-serif;background:#fff;color:#161616}
+  header,footer{background:#f4f4f4;padding:20px 32px}
+  nav{display:flex;flex-wrap:wrap;gap:8px 20px}
+  nav a{color:#161616;white-space:nowrap}
+  main{max-width:1136px;margin:0 auto;padding:40px 32px}
+  h1{font-size:40px;line-height:1.15;margin:0 0 20px}
+  h2{font-size:26px;margin:40px 0 12px}
+  figure{margin:32px 0}
+  figure img{display:block;width:100%;height:auto;border-radius:8px}
+  figcaption{color:#3d3d3d;font-size:14px;margin-top:10px}
+  .scroll{overflow-x:auto}
+  table{border-collapse:collapse;width:100%;margin-top:16px}
+  th,td{border:1px solid #d6d6d6;padding:10px 12px;text-align:left;font-size:15px}
+  thead th{background:#f4f4f4}
+  .kicker{text-transform:uppercase;letter-spacing:.12em;font-size:13px;color:#3d3d3d}
+</style>
+<header>
+  <nav>
+    <a href="/">Fixtures</a>
+    <a href="/clean.html">Clean page</a>
+    <a href="/dirty.html">Failing page</a>
+  </nav>
+</header>
+<main>
+  <p class="kicker">Fixture</p>
+  <h1>A page nothing fires on</h1>
+  <p>This page carries the front page's nav and footer, so the chrome rule has both halves of what
+  it looks for and a link back to the root. Its prose runs to the same edge as its headings, so
+  there is no run of rows that stops short of the width the page establishes. Ink is near black on
+  white throughout, which clears 4.5 to 1 at every size on the page, and the one mark on it is a
+  stroked rule inside a labelled block.</p>
+  <p>The number 41 appears in this sentence and is set at body size, which is where a figure
+  belongs when the sentence is what a reader is meant to take away. A small tracked label sits
+  above the headline on its own, and a label on its own has never been the thing this tool
+  refuses. What it refuses is the pairing: a numeral set as the subject of a card, with a caption
+  under it too small to read.</p>
+
+  <h2>A capture that earns the column</h2>
+  <figure>
+    <img src="figure-capture.png" alt="A dense block of rows.">
+    <figcaption>Glyph-scale structure at 22.71% of the downsampled plane, rendered 757px tall.
+    Shrinking this to half the measure would destroy what the reader is meant to read, which is
+    the reason a capture is allowed the column and a render is not.</figcaption>
+  </figure>
+
+  <h2>A table with a grid to scan</h2>
+  <p>Four columns, three rows, and every cell holds a value that differs from the cell beside it.
+  The row labels are terms, so the first column can be scanned.</p>
+  <div class="scroll">
+  <table>
+    <thead>
+      <tr><th scope="col">Rule</th><th scope="col">Reads</th><th scope="col">Fails on</th><th scope="col">Widths</th></tr>
+    </thead>
+    <tbody>
+      <tr><th scope="row">Contrast</th><td>Computed colour</td><td>Ratio under the floor</td><td>All</td></tr>
+      <tr><th scope="row">Dead column</th><td>Row geometry</td><td>A short run at the margin</td><td>1440</td></tr>
+      <tr><th scope="row">Figure</th><td>Image pixels</td><td>A render at the measure</td><td>All</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>What the tool does</h2>
+  <p>It opens a page in a real browser, measures seven things a linter cannot see, prints the
+  element and the numbers behind every finding, and exits non-zero. A run that could not complete
+  exits 2 and says which part it could not reach.</p>
+</main>
+<footer>
+  <p><a href="/">Back to the fixture site</a></p>
+</footer>

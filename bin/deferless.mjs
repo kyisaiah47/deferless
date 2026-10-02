@@ -23,6 +23,7 @@ deferless now runs ShipProbe: https://shipprobe.thecompound.tech
   deferless check <spec.json> [outputDir]   runs shipprobe plan
   deferless promote [--repo .] [--url ...]  runs shipprobe promote (it reads deferless.json too)
   deferless render <url> [--sample N]       runs shipprobe page
+                   [--shots dir]            saves <width>.png at each width of 1280px or more
   deferless deploy-gate                     how to wire the shell gate into a deploy script
   deferless init                            runs shipprobe init
   deferless demo                            the plan check against the bundled example

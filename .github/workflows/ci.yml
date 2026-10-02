@@ -16,6 +16,12 @@ jobs:
       # shipprobe is the one dependency. Every deferless command forwards to it.
       - name: install
         run: npm ci
+      # Playwright is an optional peer of shipprobe. The render --shots checks open a real page,
+      # so it is installed here without being added to package.json.
+      - name: install playwright
+        run: |
+          npm install --no-save --no-package-lock playwright@1
+          npx playwright install --with-deps chromium
       - name: suite
         run: bash test/run.sh
       - name: demo is honest

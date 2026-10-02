@@ -70,16 +70,18 @@ tests are the specification.
 
 ## Build, test, lint
 
-There is no build step and no bundler. Run `npm install` once to get shipprobe.
+There is no build step and no bundler. Run `npm install` once to get shipprobe. The render
+`--shots` checks open a real page, so install Playwright beside it without saving it:
+`npm install --no-save --no-package-lock playwright@1 && npx playwright install chromium`.
 
 ```sh
-bash test/run.sh                  # everything: 18 checks + 46 deploy-gate regressions
+bash test/run.sh                  # everything: 22 checks + 46 deploy-gate regressions
 bash test/deploy-gate.test.sh     # the shell gate alone, under bash and zsh
 node bin/deferless.mjs demo       # the example gate; also a test — passing must pass, failing must fail
 ```
 
 CI (`.github/workflows/ci.yml`) runs `npm ci` and then the same suite on ubuntu-latest, with
-`zsh` and `ffmpeg` installed. shipprobe is the only dependency. Adding another one means the README
+`zsh`, `ffmpeg`, Playwright and Chromium installed. shipprobe is the only dependency. Adding another one means the README
 changes in the same commit.
 
 ## Conventions

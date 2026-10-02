@@ -92,18 +92,16 @@ export function promote(args) {
   return shipprobe(['promote', ...args]);
 }
 
-/* deferless render <url> [--sample N] [--json] [--quiet] [--all]. --all only changed how many
- * findings were printed, and shipprobe page prints every finding, so it is dropped. --shots wrote
- * screenshots, which shipprobe page does not do, so it is refused rather than ignored. */
+/* deferless render <url> [--sample N] [--shots dir] [--json] [--quiet] [--all]. --all only changed
+ * how many findings were printed, and shipprobe page prints every finding, so it is dropped.
+ * --shots goes to shipprobe page unchanged. It saves <width>.png at each rendered width of 1280px
+ * or more; deferless 0.1 also saved the phone and tablet widths. Its value is skipped by split(),
+ * so `--shots out/` is never read as a URL. */
 export function render(args) {
-  if (args.includes('--shots')) {
-    process.stderr.write('deferless render: --shots is not available in shipprobe page, so nothing was checked.\n');
-    return 2;
-  }
   const kept = args.filter((a) => a !== '--all');
   const { pos } = split(kept);
   if (!pos.length) {
-    process.stderr.write('usage: deferless render <url> [<url> ...] [--sample N] [--json] [--quiet]\n');
+    process.stderr.write('usage: deferless render <url> [<url> ...] [--sample N] [--shots dir] [--json] [--quiet]\n');
     return 2;
   }
   return shipprobe(['page', ...kept]);

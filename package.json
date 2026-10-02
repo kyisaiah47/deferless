@@ -1,6 +1,6 @@
 {
   "name": "deferless",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "deferless now runs ShipProbe. The deferless command forwards check, promote and render to shipprobe plan, promote and page, with the same exit codes.",
   "type": "module",
   "bin": {
@@ -46,7 +46,7 @@
     "node": ">=20"
   },
   "dependencies": {
-    "shipprobe": "^0.1.0"
+    "shipprobe": "^0.1.1"
   },
   "peerDependenciesMeta": {
     "playwright": {

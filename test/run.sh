@@ -88,6 +88,20 @@ if [ "$RG" = 0 ] || [ "$RG" = 1 ]; then ok "render gate ran against a real page 
 elif [ "$RG" = 2 ]; then ok "render gate reports 'could not run' (exit 2), not a pass — playwright absent"
 else bad "render gate returned an undefined exit ($RG)"; fi
 
+# --shots: deferless 0.2.0 refused it with exit 2. It now goes to shipprobe page, which saves a
+# full-page <width>.png at each rendered width of 1280px or more. These need Playwright, and
+# without it they fail: a skipped picture check reads exactly like a passing one.
+FIXTURE=test/fixtures/render/index.html
+pngw() { node -e 'const b=require("fs").readFileSync(process.argv[1]);process.exit(b.toString("latin1",1,4)==="PNG"&&b.readUInt32BE(16)===Number(process.argv[2])?0:1)' "$1" "$2" 2>/dev/null; }
+exits "render --shots exits 0 on a clean page"     0 node bin/deferless.mjs render "$FIXTURE" --shots "$TMP/shots"
+pngw "$TMP/shots/1280.png" 1280 && ok "render --shots wrote 1280.png, 1280 wide" || bad "render --shots wrote 1280.png, 1280 wide"
+pngw "$TMP/shots/1920.png" 1920 && ok "render --shots wrote 1920.png, 1920 wide" || bad "render --shots wrote 1920.png, 1920 wide"
+# A flag's value is not a URL: with --shots first, its folder must not be opened as a target.
+node bin/deferless.mjs render --shots "$TMP/shots-first" "$FIXTURE" >/dev/null 2>&1
+SF=$?
+if [ "$SF" = 0 ] && [ -f "$TMP/shots-first/1280.png" ]; then ok "a --shots value before the URL is not read as a URL"
+else bad "a --shots value before the URL is not read as a URL (exit $SF)"; fi
+
 echo "== cli =="
 exits "demo self-verifies both trees"              0 node bin/deferless.mjs demo
 exits "unknown command is an error"                2 node bin/deferless.mjs frobnicate
