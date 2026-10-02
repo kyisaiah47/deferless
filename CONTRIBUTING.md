@@ -1,7 +1,8 @@
 # Contributing
 
-New check kinds are the most useful contribution. A check kind is a function in the `CHECKS`
-object in `src/plan-gate.mjs`; there is no plugin system and no registry to update.
+deferless now runs ShipProbe, and the check kinds live there, in `src/plan/index.mjs` of
+github.com/kyisaiah47/shipprobe. Contribute new check kinds to that repo. This repo only keeps the
+deferless command forwarding to shipprobe.
 
 ## The one rule that governs every patch
 

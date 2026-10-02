@@ -8,16 +8,20 @@ have fixed. It would be a poor joke to leave that unwritten here, so this file i
 
 ## What this project is
 
-Four fail-closed gates that check work an agent did on someone's behalf. Node 18+, **zero runtime
-dependencies**, ESM (`"type": "module"`) throughout.
+deferless now runs ShipProbe (github.com/kyisaiah47/shipprobe). This repo is the thin package
+that keeps the `deferless` command working: each command forwards to the shipprobe CLI, which is
+its one runtime dependency, and the exit codes are unchanged. Node 20+, ESM (`"type": "module"`)
+throughout. Check logic changes go to the shipprobe repo, not here. The code from before ShipProbe
+is at tag v0.1.1.
 
 ```
-bin/deferless.mjs      the CLI dispatcher — thin shims onto src/, uniform exit codes
-src/plan-gate.mjs      `deferless check`   — output vs the approved plan (14 check kinds)
-src/promote-gate.mjs   `deferless promote` — every declared gate, before the promote
-src/render-gate.mjs    `deferless render`  — a real browser, measuring real pixels
+bin/deferless.mjs      the CLI dispatcher; every command forwards to shipprobe
+src/forward.mjs        resolves the shipprobe CLI, prints the one notice line, maps the arguments
+src/plan-gate.mjs      kept for old deferless.json gates; runs shipprobe plan
+src/promote-gate.mjs   kept for old deferless.json gates; runs shipprobe promote
+src/render-gate.mjs    kept for old deferless.json gates; runs shipprobe page
 sh/deploy-lock.sh      POSIX shell deploy gate; defers while peer sessions are working
-test/run.sh            the whole suite — no install, runs from a clean clone
+test/run.sh            the whole suite; run npm install first
 test/deploy-gate.test.sh   46 regressions, run under BOTH bash and zsh
 examples/api-docs/     a passing tree and a failing tree; `deferless demo` runs both
 docs/SPEC.md           the spec format reference
@@ -66,7 +70,7 @@ tests are the specification.
 
 ## Build, test, lint
 
-There is no build step and no bundler. There is nothing to install.
+There is no build step and no bundler. Run `npm install` once to get shipprobe.
 
 ```sh
 bash test/run.sh                  # everything: 18 checks + 46 deploy-gate regressions
@@ -74,18 +78,16 @@ bash test/deploy-gate.test.sh     # the shell gate alone, under bash and zsh
 node bin/deferless.mjs demo       # the example gate; also a test — passing must pass, failing must fail
 ```
 
-CI (`.github/workflows/ci.yml`) runs the same suite on ubuntu-latest and installs only `zsh` and
-`ffmpeg`. **There is deliberately no `npm install` step.** If you ever need to add one, the
-zero-dependency claim in the README has stopped being true and the README must change in the same
-commit.
+CI (`.github/workflows/ci.yml`) runs `npm ci` and then the same suite on ubuntu-latest, with
+`zsh` and `ffmpeg` installed. shipprobe is the only dependency. Adding another one means the README
+changes in the same commit.
 
 ## Conventions
 
 - **ESM only.** `import`, `node:`-prefixed builtins, no `require`, no `__dirname` (use
   `fileURLToPath(import.meta.url)`).
-- **No dependencies.** Not in `dependencies`, not in `devDependencies`. Playwright is an optional
-  peer used by one gate and resolved at run time; its absence is exit 2, never a pass. The tiny
-  glob in `plan-gate.mjs` supports `**/` and `*` only, on purpose — it is not worth a package.
+- **One dependency, shipprobe.** Nothing else in `dependencies` or `devDependencies`. Playwright
+  is an optional peer that shipprobe resolves at run time; its absence is exit 2, never a pass.
 - **Shell code stays POSIX** and must work under both bash and zsh. No arrays, no `[[ ]]`, no
   process substitution. zsh scopes a `trap ... EXIT` set inside a function to that function, and
   it aborts on a glob that matches nothing — both are why `sh/deploy-lock.sh` looks the way it

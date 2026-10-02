@@ -1,5 +1,6 @@
 #!/bin/bash
-# run.sh — the whole suite. Zero dependencies; runs from a clean clone with nothing installed.
+# run.sh: the whole suite. deferless now forwards to ShipProbe, so run `npm install` first; the
+# suite then asserts that every exit code deferless 0.1 gave is still the one it gives.
 #
 #   bash test/run.sh
 #
@@ -92,7 +93,7 @@ exits "demo self-verifies both trees"              0 node bin/deferless.mjs demo
 exits "unknown command is an error"                2 node bin/deferless.mjs frobnicate
 exits "help works"                                 0 node bin/deferless.mjs --help
 ( cd "$TMP" && node "$ROOT/bin/deferless.mjs" init >/dev/null 2>&1 )
-[ -f "$TMP/deferless.json" ] && ok "init writes a config" || bad "init writes a config"
+[ -f "$TMP/shipprobe.json" ] && ok "init writes a config (shipprobe.json)" || bad "init writes a config (shipprobe.json)"
 exits "init refuses to overwrite"                  2 sh -c "cd '$TMP' && node '$ROOT/bin/deferless.mjs' init"
 
 echo "== deploy gate =="

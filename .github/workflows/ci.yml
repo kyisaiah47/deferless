@@ -8,13 +8,14 @@ jobs:
     # Both shells, because the worst bug the deploy gate ever had was invisible in bash.
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: '20' }
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with: { node-version: '22' }
       - name: install zsh
         run: sudo apt-get update && sudo apt-get install -y zsh ffmpeg
-      # No `npm install` step on purpose: if this ever needs one, the zero-dependency
-      # claim in the README has quietly stopped being true.
+      # shipprobe is the one dependency. Every deferless command forwards to it.
+      - name: install
+        run: npm ci
       - name: suite
         run: bash test/run.sh
       - name: demo is honest

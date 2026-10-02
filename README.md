@@ -1,9 +1,17 @@
 # deferless
 
+> **deferless now runs [ShipProbe](https://github.com/kyisaiah47/shipprobe).** ShipProbe replaces
+> leakless, stubless, glanceless and deferless with one CLI and one GitHub Action. `deferless check`
+> is now `shipprobe plan`, `deferless promote` is `shipprobe promote`, and `deferless render` is
+> `shipprobe page`. The deferless command still works: version 0.2.0 forwards each command to
+> shipprobe and keeps the same exit codes. New work happens in ShipProbe, documented at
+> [shipprobe.thecompound.tech](https://shipprobe.thecompound.tech/plan). The code from before
+> ShipProbe is at tag [v0.1.1](https://github.com/kyisaiah47/deferless/tree/v0.1.1).
+
 [![gates](https://github.com/kyisaiah47/deferless/actions/workflows/ci.yml/badge.svg)](https://github.com/kyisaiah47/deferless/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/deferless.svg)](https://www.npmjs.com/package/deferless)
 [![licence: MIT](https://img.shields.io/badge/licence-MIT-blue.svg)](LICENSE)
-[![dependencies: 0](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](package.json)
+[![dependencies: 1](https://img.shields.io/badge/dependencies-1-blue.svg)](package.json)
 [![AGENTS.md](https://toolproof.thecompound.tech/badge/rulestack/kyisaiah47/deferless.svg)](https://rulestack.thecompound.tech)
 
 <sub>The last one is a live third-party score of this repo's [AGENTS.md](AGENTS.md), re-read
@@ -81,8 +89,8 @@ npx deferless demo            # no install, runs the example above
 npm i -D deferless            # in a project
 ```
 
-Node 18+. **Zero runtime dependencies.** Playwright is an optional peer, needed only by the
-browser gate; everything else runs on a bare node with nothing installed.
+Node 20+. The one runtime dependency is shipprobe, which runs every check. Playwright is an
+optional peer, needed only by `deferless render`.
 
 ## The four gates
 
@@ -218,10 +226,11 @@ answers, and a pipeline that renders them both as green has taught itself to ign
 
 ```sh
 git clone https://github.com/kyisaiah47/deferless && cd deferless
+npm install
 bash test/run.sh
 ```
 
-Nothing to install. The suite asserts the claims this README makes — that a spec with no checks
+The suite asserts the claims this README makes — that a spec with no checks
 cannot pass, that an unknown check kind fails rather than skips, that a missing gate file fails,
 that an unreadable spec exits 2 and not 1, that the demo's passing tree passes and its failing
 tree fails. Those tests exist because **a test suite that only proves the happy path leaves every

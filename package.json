@@ -1,7 +1,7 @@
 {
   "name": "deferless",
-  "version": "0.1.1",
-  "description": "Fail-closed gates for work an AI agent did on your behalf: a plan it cannot quietly deviate from, and findings it cannot defer.",
+  "version": "0.2.0",
+  "description": "deferless now runs ShipProbe. The deferless command forwards check, promote and render to shipprobe plan, promote and page, with the same exit codes.",
   "type": "module",
   "bin": {
     "deferless": "bin/deferless.mjs"
@@ -34,7 +34,7 @@
   ],
   "license": "MIT",
   "author": "Compound Labs (https://thecompound.tech)",
-  "homepage": "https://github.com/kyisaiah47/deferless#readme",
+  "homepage": "https://shipprobe.thecompound.tech/plan",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kyisaiah47/deferless.git"
@@ -43,9 +43,11 @@
     "url": "https://github.com/kyisaiah47/deferless/issues"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
-  "dependencies": {},
+  "dependencies": {
+    "shipprobe": "^0.1.0"
+  },
   "peerDependenciesMeta": {
     "playwright": {
       "optional": true
