@@ -15,16 +15,15 @@
 [![AGENTS.md](https://toolproof.thecompound.tech/badge/rulestack/kyisaiah47/deferless.svg)](https://rulestack.thecompound.tech)
 
 <sub>The last one is a live third-party score of this repo's [AGENTS.md](AGENTS.md), re-read
-nightly. Until that crawl reaches a repository this new it reads **not indexed** — which is the
-correct output and not a bad one. An unmeasured subject renders as unmeasured, never as a pass;
-same rule as [exit code 2](docs/PRINCIPLES.md).</sub>
+nightly. Until that crawl reaches a repository this new, it reports ****not indexed****. That
+is the correct output. An unmeasured subject renders as unmeasured, never as a pass. This
+follows the same rule as [[exit code 2](docs/PRINCIPLES.md)](docs/PRINCIPLES.md).</sub>
 
-**Fail-closed gates for work an AI agent did on your behalf.** A plan it cannot quietly deviate
-from, and findings it cannot defer to you.
+****Fail-closed gates for work an AI agent did on your behalf.**** The plan cannot be quietly
+changed, and findings cannot be deferred to you.
 
-There is no `--force`, no allowlist and no known-issues file. That is not an oversight — each of
-those is a supported way to record a failure and ship past it, which is the exact behaviour these
-gates exist to make impossible.
+The CLI has no `--force`, allowlist or known-issues file. Each option would record a failure and
+let the output ship. These gates prevent that behavior.
 
 ```
 npx deferless demo
@@ -32,30 +31,31 @@ npx deferless demo
 
 ---
 
-## The thing this is actually about
+## What this checks
 
-A coding agent will follow a plan for about ninety minutes. Then it hits something the plan did
-not anticipate, invents a local fix, and the local fix is fine — it builds, it renders, nothing
-errors, the output looks completely correct. The one sentence in the plan it just contradicted is
-in a document, and the problem is right here in the shell.
+A coding agent follows a plan for about ninety minutes. It then encounters an unanticipated case
+and invents a local fix. The fix can build and render without errors. The output can look
+correct. The agent has still contradicted one sentence in the plan, and the contradiction remains
+in the document and the shell.
 
-Nothing in your pipeline can tell. Tests pass, because the agent wrote code that works. Lint
-passes, because the code is clean. CI is green. You are the only detector, and you find out by
-looking at the output days later and going *"wait, why is it zoomed in?"*
+Your pipeline cannot detect this case. Tests pass because the agent wrote working code. Lint
+passes because the code is clean. CI is green. You detect the problem only by inspecting the
+output days later and finding that it is zoomed in.
 
-The second half is worse, because it is polite. The agent finds a real defect while working, and
-hands it to you written up: *"one thing I deliberately left alone."* It saved itself two minutes
-and spent twenty of yours — you now have to read the finding, decide, and re-issue an instruction
-that was already obvious.
+The agent can also find a real defect and report it as *"one thing I deliberately left alone."*
+It saves itself two minutes and spends twenty of yours. You must read the finding, decide what to
+do, and issue an instruction that was already clear.
 
-Both are the same bug. **A rule stated in prose is checked by the same judgement that just
-decided to break it.** So none of these gates ask. They remove the state that made the deviation
-possible, and they exit non-zero.
+Both are the same bug. ****A rule stated in prose is checked by the same judgement that
+just
+decided to break it.**** So these gates do not ask. They remove the state that made the
+deviation possible, and they exit non-zero.
 
-## What it looks like
+## Output example
 
-Here is the actual output of `npx deferless demo`. Two directories of API documentation. Both
-build. Both render. One of them was produced by an agent working from an approved plan.
+`npx deferless demo` prints the actual output below. The example contains two directories of
+API documentation. Both directories build. Both directories render. An agent produced one
+directory from an approved plan.
 
 ```
 ✖ 5 violation(s) — the output does NOT match the approved plan:
@@ -78,9 +78,9 @@ build. Both render. One of them was produced by an agent working from an approve
 Nothing here ships. Fix the output, or change the plan in the open and say so.
 ```
 
-Every violation is reported **in the plan's own words**, not the gate's. That is the whole design
-of the spec format: each check carries the sentence it enforces, so a failure is a quote from
-something a human approved rather than an error from a linter nobody remembers configuring.
+The system reports every violation ****in the plan's own words****, not the gate's. The spec
+format gives each check the sentence it enforces. A failure therefore quotes text that a human
+approved instead of reporting an error from a linter nobody remembers configuring.
 
 ## Install
 
@@ -94,10 +94,11 @@ optional peer, needed only by `deferless render`.
 
 ## The four gates
 
-### 1. `deferless check` — the plan gate
+### 1. `deferless check` checks the plan
 
-Turns an approved plan into something that can refuse output. You write a `spec.json` beside the
-plan, with one check per binding sentence, and the `quote` field holds that sentence verbatim.
+`deferless check` converts an approved plan into output checks. You write a `spec.json` beside
+the plan. The file contains one check for each binding sentence. The `quote` field stores that
+sentence verbatim.
 
 ```jsonc
 {
@@ -117,10 +118,11 @@ plan, with one check per binding sentence, and the `quote` field holds that sent
 deferless check plan.spec.json ./out
 ```
 
-Fourteen check kinds ship. Six are answerable from the filesystem (`files`, `requires`,
-`forbids`, `pairedFile`, `sidecar`, `media`). Eight decode **real pixels** out of video with
-ffmpeg — frame fill, luminance band, accent-colour share, motion floor, text ink height,
-mark presence by cross-correlation, cut cadence against declared seams, shot distinctness.
+The package includes fourteen check kinds. Six read the filesystem: `files`, `requires`,
+`forbids`, `pairedFile`, `sidecar` and `media`. Eight use ffmpeg to decode ****real
+pixels**** from video: frame fill, luminance band, accent-colour share, motion floor, text
+ink height, mark presence by cross-correlation, cut cadence against declared seams and shot
+distinctness.
 
 That second group exists because the first version of this was metadata-only, and **a browser
 rendering a single `<h1>` passed every check in a full video spec.** A text slide and a product
@@ -128,18 +130,18 @@ demo have identical `ffprobe` output. Every threshold in the pixel checks is cal
 measurements taken off real reference material, not guessed — the numbers and their provenance
 are in the source, beside the check they govern.
 
-Full reference: **[docs/SPEC.md](docs/SPEC.md)**.
+Read the full reference in ****[docs/SPEC.md](docs/SPEC.md)****.
 
-### 2. `deferless promote` — the no-deferrals gate
+### 2. `deferless promote` blocks deferrals
 
-Runs every gate you declare **against a local production build, before anything is promoted.**
+The system runs every gate you declare ****against a local production build, before anything is promoted.****
 
-The enabling mechanic for "I'll report it instead of fixing it" was never laziness — it was
-ordering. The deploy script ran its live checks *after* the deploy had already landed. By the
-time a finding appeared, the work was live, so writing it up genuinely was the only remaining
-move. The deferral was baked into the script.
+The script's ordering enabled the behavior described as "I'll report it instead of fixing
+it." The deploy script ran its live checks after the deploy landed. The work was live when
+the finding appeared. Writing up the finding was then the only remaining action. The script
+made deferral part of the deployment process.
 
-Move the checks in front of the promote and the same finding blocks instead of annotates.
+The promote step runs the checks first. The same finding then blocks the promote instead of adding an annotation.
 
 ```sh
 deferless init          # writes deferless.json
@@ -151,15 +153,17 @@ that silently stops running is indistinguishable from a check that found nothing
 **zero gates run is not a pass** — if nothing could be checked, the honest answer is "I could not
 check", never "clean".
 
-### 3. `deferless render` — the gate that opens the page
+### 3. `deferless render` checks the rendered page
 
-Every other gate reads source. All of them passed on the day a landing page shipped with an
-invisible hero: the `<h1>` held its animation start frame at `opacity: 0.001`, permanently. The
-element was in the DOM, at the right size, the right colour, the right position. **There is no
-string to grep for that.** The only way to know is to render the page and measure the pixel.
+Every other gate reads source. All of them passed when a landing page shipped with an invisible
+hero: the `<h1>` held its animation start frame at `opacity: 0.001`, permanently. The element
+was in the DOM, at the right size, the right colour, and the right position. ****There is
+no
+string to grep for that.**** Rendering the page and measuring its pixels is the only way to
+detect it.
 
-So this one never reads a file. It takes a URL, drives a real browser, and asks the questions a
-screenshot answers and a grep cannot:
+This gate does not read a file. It takes a URL and drives a real browser. It checks conditions
+that a screenshot can answer and grep cannot:
 
 | | |
 |---|---|
@@ -183,21 +187,22 @@ The `--shots <dir>` option saves a full-page PNG at each width it renders. Each 
 The run still measures those widths. The run no longer captures those widths. The run prints a
 note that names them. A picture that cannot be saved exits 2.
 
-`--sample N` reads the site's own `sitemap.xml` and takes up to N interior pages, one per
-distinct first path segment — so a sitemap with four thousand `/kit/<slug>` URLs contributes one
-of them, and the sample is a tour of page *types* rather than N near-identical rows.
+`--sample N` reads the site's `sitemap.xml`. It selects up to N interior pages, with one page
+for each distinct first path segment. A sitemap with four thousand `/kit/<slug>` URLs
+contributes one page. The sample therefore covers page *types* instead of N near-identical rows.
 
-### 4. `deferless deploy-gate` — the multi-agent deploy gate
+### 4. `deferless deploy-gate` coordinates multi-agent deploys
 
-A POSIX shell library for the case where **several agent sessions are editing the same tree at
-once.**
+A POSIX shell library handles the case where ****several agent sessions are editing the same
+tree at
+once.****
 
-A deploy fired while other sessions are still working does not deploy. It registers as pending
-and exits. When everything actually goes quiet, one pass ships everything pending, once.
+A deploy does not run while other sessions are working. The gate registers the deploy as
+pending and exits. After all sessions become idle, one pass ships every pending deploy once.
 
-It defers rather than queues, deliberately: a queued deploy builds a tree that three other
-sessions are still editing, ships it, and is stale before it finishes. Ten sessions produce ten
-builds of the same repo and only the last was ever worth running.
+The gate defers deploys instead of queuing them. A queued deploy would build a tree that three
+other sessions are still editing. That build could ship stale before it finishes. Ten sessions
+would produce ten builds of the same repository, although only the last build would matter.
 
 ```sh
 . node_modules/deferless/sh/deploy-lock.sh
@@ -206,16 +211,16 @@ deploy_gate my-app
 DEPLOY_NOW=1 ./scripts/deploy.sh    # ship now regardless
 ```
 
-It counts a session as a peer by looking for interactive Claude Code control sockets
-(`/tmp/cc-socks/*.sock`, configurable), and only ones with a TTY — a headless `claude -p` lane
-fires constantly and would keep things looking busy forever. Underneath the deferral is a mutex
-with a heartbeat, stolen once the heartbeat goes cold, because a lock with no expiry is how you
-strand a fleet for two days.
+The gate identifies a peer session by finding interactive Claude Code control sockets
+(`/tmp/cc-socks/*.sock`, configurable). It counts only sockets with a TTY. A headless `claude
+-p` lane fires constantly and would keep the tree busy forever. The gate uses a mutex with a
+heartbeat. It steals the mutex after the heartbeat goes cold. A lock without expiry can strand
+a fleet for two days.
 
-46 regression tests, run under **both bash and zsh** — the worst bug this gate ever had was
-invisible in bash: zsh scopes a `trap ... EXIT` set inside a function to that function, so
-installing the release trap inside the acquire helper deleted the lock the instant it was taken.
-Two deploys then ran straight through each other while the code looked completely correct.
+The suite contains 46 regression tests under ****both bash and zsh****. Bash did not expose the
+worst bug. In zsh, a `trap ... EXIT` set inside a function applies to that function. The release
+trap inside the acquire helper therefore deleted the lock immediately after acquisition. Two
+deploys then ran concurrently while the code appeared correct.
 
 ## Exit codes
 
@@ -226,10 +231,11 @@ Two deploys then ran straight through each other while the code looked completel
 | `2` | **the gate could not run** — never collapses into 0 |
 | `3` | every violation was "this was never produced" (see [docs/SPEC.md](docs/SPEC.md)) |
 
-`2` is the one that matters. "I could not check" and "I checked and it was fine" are different
-answers, and a pipeline that renders them both as green has taught itself to ignore the gate.
+`2` reports that the gate could not check the output. "I could not check" and "I checked and
+it was fine" are different results. A pipeline that renders both results as green teaches
+itself to ignore the gate.
 
-## Running the tests
+## Run the tests
 
 ```sh
 git clone https://github.com/kyisaiah47/deferless && cd deferless
@@ -245,62 +251,65 @@ one of those claims unchecked**, which is the same failure this project is about
 
 ## Honest limitations
 
-- **The spec is written by hand.** Nothing here infers checks from prose, and the gate is only as
-  good as the sentences you chose to encode. A plan with three binding sentences and a
-  one-check spec is two-thirds ungated.
-- **It gates output, not intent.** An agent can satisfy every check and still build the wrong
-  thing. This narrows the gap between "approved" and "shipped"; it does not close it.
-- **The pixel checks need ffmpeg**, and their thresholds are calibrated for dark, dense product
-  UI. Recalibrate them against your own reference material rather than trusting the defaults —
-  the source says where every number came from.
-- **The browser gate needs Playwright** and takes real seconds per page.
-- **The deploy gate is macOS/Linux shell** and detects Claude Code sessions specifically. The
-  socket directory is configurable; other agent runners need a small patch.
+- ****The spec is written by hand.**** The package does not infer checks from prose. The gate is
+  only as complete as the sentences you encode. A plan with three binding sentences and a
+  one-check spec leaves two-thirds of the plan ungated.
+- ****It gates output, not intent.**** An agent can satisfy every check and still build the
+  wrong thing. The gate narrows the gap between "approved" and "shipped"; it does not close
+  it.
+- ****The pixel checks need ffmpeg**.** Their thresholds are calibrated for dark, dense product
+  UI. Recalibrate them against your own reference material instead of using the defaults. The
+  source records the origin of every number.
+- ****The browser gate needs Playwright**.** It takes real seconds per page.
+- ****The deploy gate is macOS/Linux shell**** and detects Claude Code sessions specifically.
+  You can configure the socket directory. Other agent runners need a small patch.
 
-## Why it is called deferless
+## Why the name is deferless
 
-The two failures it was built against are *deviation* — the agent quietly not doing what was
-agreed — and *deferral* — the agent handing back a finding it could have fixed. The second one is
-the one nobody talks about, because it arrives looking like diligence.
+Deferless checks two failures: deviation occurs when an agent does not follow the agreed work,
+and deferral occurs when an agent returns a finding it could have fixed. A deferral can look like
+diligence because the agent returns a finding it could have fixed.
 
-## Prior art, and what is different
+## Prior art and differences
 
-There is a real and growing shelf of agent guardrails: pre-action authorization plugins, policy
-gateways, runtime interception, approval steps in front of every tool call. Those all sit
-**before** the agent acts, and they answer *is this action allowed*.
+Agent guardrails form a growing set of pre-action authorization plugins, policy gateways,
+runtime interception, and approval steps in front of every tool call. These mechanisms run
+**before** the agent acts and answer whether an action is allowed.
 
-These gates sit **after**, and answer a different question: *does the artifact that came out match
-the thing we agreed to build, and did anything get quietly left behind on the way.* No amount of
-pre-action policy answers that, because every individual action was allowed.
+These gates run **after** the agent acts. They determine whether the resulting artifact matches
+the agreed work and whether the agent left a finding unresolved. Pre-action policy cannot answer
+those questions because every individual action was allowed.
 
 ## Contributing
 
-New check kinds are the most useful contribution — see [CONTRIBUTING.md](CONTRIBUTING.md). One
-rule governs every patch: **nothing may be added that lets a known failure ship.** No `--force`,
-no allowlist, no known-issues file, no "warn instead of fail" toggle on an existing check. If a
-check is wrong, fix the check in the open. See [docs/PRINCIPLES.md](docs/PRINCIPLES.md).
+New check kinds are the most useful contribution. See
+[[CONTRIBUTING.md](CONTRIBUTING.md)](CONTRIBUTING.md). One rule governs every patch: ****nothing
+may be added that lets a known failure ship.**** The project has no `--force`, allowlist,
+known-issues file, or "warn instead of fail" toggle on an existing check. Fix an incorrect check
+in the open. See [[docs/PRINCIPLES.md](docs/PRINCIPLES.md)](docs/PRINCIPLES.md).
 
-## The defect class these were built for, counted
+## The defect class these gates address, counted
 
-If you want a number for how often the *"the rule exists, everything builds, nothing errors, and
-the only detector is a human who happens to look"* failure actually happens: a census published
-the same week as this repo measured **445,348 published Claude Code artefacts and found 43,199 of
-them fail a structural check** — 88.4% of those a YAML block that does not parse. Nothing in the
-publishing path checks it.
+A census published the same week as this repo measured ****445,348 published Claude Code
+artefacts and found 43,199 of
+them fail a structural check****. A YAML block that does not parse
+caused 88.4% of those failures. The publishing path performs no check for this failure.
 
-- [The census](https://toolproof.thecompound.tech/census) · dataset DOI
-  [10.5281/zenodo.21936490](https://doi.org/10.5281/zenodo.21936490), CC BY 4.0
-- [Measurement vocabulary](https://toolproof.thecompound.tech/methodology/vocabulary) — load rate,
-  drift, shipping status, skill decay
-- [Toolproof](https://toolproof.thecompound.tech) — the indexes the census is drawn from
+- [The census links to its dataset DOI: [The
+  census](https://toolproof.thecompound.tech/census) and
+  [[10.5281/zenodo.21936490](https://doi.org/10.5281/zenodo.21936490)](https://doi.org/10.5281/zenodo.21936490),
+  CC BY 4.0.
+- [The [Measurement vocabulary](https://toolproof.thecompound.tech/methodology/vocabulary) covers
+  load rate, drift, shipping status, and skill decay.
+- [[Toolproof](https://toolproof.thecompound.tech) provides the indexes used for the census.
 
-Both halves are the same problem seen from opposite ends. The census counts artefacts that were
-published broken. These gates are what refusing to publish one looks like.
+The census and these gates address the same problem from opposite ends. The census counts
+artefacts that were published broken. These gates refuse to publish that kind of artefact.
 
 ## Licence
 
 MIT. Built and used in production by [Compound Labs](https://thecompound.tech).
 
-These gates run against a live estate of ~35 products — the deviation, the deferral, the
-invisible hero, the ten-stale-builds problem and the zsh trap bug are all real incidents from it,
-and the comments in the source name the date and the measurement for each one.
+These gates run against a live estate of ~35 products. The deviation, deferral, invisible hero,
+ten-stale-builds problem, and zsh trap bug are real incidents from that estate. The source
+comments name the date and measurement for each incident.
