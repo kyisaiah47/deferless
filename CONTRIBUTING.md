@@ -1,6 +1,6 @@
 # Contributing
 
-deferless now runs ShipProbe, and the check kinds live there, in `src/plan/index.mjs` of
+deferless now runs ShipProbe. The check kinds live in `src/plan/index.mjs` of
 github.com/kyisaiah47/shipprobe. Contribute new check kinds to that repo. This repo only keeps the
 deferless command forwarding to shipprobe.
 

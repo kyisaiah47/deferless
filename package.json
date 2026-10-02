@@ -1,7 +1,7 @@
 {
   "name": "deferless",
   "version": "0.2.1",
-  "description": "deferless now runs ShipProbe. The deferless command forwards check, promote and render to shipprobe plan, promote and page, with the same exit codes.",
+  "description": "deferless now runs ShipProbe. The deferless command forwards `check`, `promote` and `render` to `shipprobe plan`, `promote` and `page`, with the same exit codes.",
   "type": "module",
   "bin": {
     "deferless": "bin/deferless.mjs"

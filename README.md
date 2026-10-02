@@ -1,11 +1,11 @@
 # deferless
 
 > **deferless now runs [ShipProbe](https://github.com/kyisaiah47/shipprobe).** ShipProbe replaces
-> leakless, stubless, glanceless and deferless with one CLI and one GitHub Action. `deferless check`
-> is now `shipprobe plan`, `deferless promote` is `shipprobe promote`, and `deferless render` is
-> `shipprobe page`. The deferless command still works: since version 0.2.0 it forwards each command
-> to shipprobe and keeps the same exit codes. New work happens in ShipProbe, documented at
-> [shipprobe.thecompound.tech](https://shipprobe.thecompound.tech/plan). The code from before
+> leakless, stubless, glanceless and deferless with one CLI and one GitHub Action. `shipprobe plan`
+> replaces `deferless check`. `shipprobe promote` replaces `deferless promote`. `shipprobe page`
+> replaces `deferless render`. The deferless command still works. Since version 0.2.0, it forwards
+> each command to shipprobe and keeps the same exit codes. New work happens in ShipProbe, documented
+> at [shipprobe.thecompound.tech](https://shipprobe.thecompound.tech/plan). The code from before
 > ShipProbe is at tag [v0.1.1](https://github.com/kyisaiah47/deferless/tree/v0.1.1).
 
 [![gates](https://github.com/kyisaiah47/deferless/actions/workflows/ci.yml/badge.svg)](https://github.com/kyisaiah47/deferless/actions/workflows/ci.yml)
@@ -177,11 +177,11 @@ deferless render https://example.com/ --sample 6
 deferless render ./dist/index.html --shots shots/
 ```
 
-`--shots <dir>` saves a full-page PNG of the page at each width it renders, named `<width>.png`.
-Pictures are taken at 1280px and wider only, so by default the folder gets `1280.png` and
-`1920.png`. deferless 0.1 also saved `320.png`, `375.png`, `414.png` and `768.png`. Those widths
-are still measured, but they are no longer captured, and the run prints a note that names them.
-A picture that cannot be saved exits 2.
+The `--shots <dir>` option saves a full-page PNG at each width it renders. Each file is named
+`<width>.png`. Pictures are taken only at 1280px and wider. The folder gets `1280.png` and
+`1920.png` by default. deferless 0.1 also saved `320.png`, `375.png`, `414.png` and `768.png`.
+The run still measures those widths. The run no longer captures those widths. The run prints a
+note that names them. A picture that cannot be saved exits 2.
 
 `--sample N` reads the site's own `sitemap.xml` and takes up to N interior pages, one per
 distinct first path segment — so a sitemap with four thousand `/kit/<slug>` URLs contributes one
