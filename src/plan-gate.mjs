@@ -141,11 +141,15 @@ function walk(dir, acc = []) {
   }
   return acc;
 }
+// `**/` becomes a placeholder first and its regex last. Replacing it directly with `(?:.*/)?` let
+// the next step rewrite that `*` to `[^/]*`, so `**/` matched one directory level at most.
+const ANY_DEPTH = '\u0000';
 function glob(pattern) {
   const rx = new RegExp('^' + pattern
     .replace(/[.+^${}()|[\]\\]/g, '\\$&')
-    .replace(/\*\*\//g, '(?:.*/)?')
-    .replace(/\*/g, '[^/]*') + '$');
+    .replace(/\*\*\//g, ANY_DEPTH)
+    .replace(/\*/g, '[^/]*')
+    .replaceAll(ANY_DEPTH, '(?:.*/)?') + '$');
   return walk(ROOT).filter((f) => rx.test(path.relative(ROOT, f))).sort();
 }
 

@@ -122,7 +122,9 @@ EOF
   chmod +x "$D/slow.sh"
   rm -rf "$D/home/deploy.lock"
   ( "$D/slow.sh" > "$D/slow.out" 2>&1 ) &
-  sleep 2
+  # Wait until the holder says it holds the lock. A fixed `sleep 2` raced the holder's start-up on
+  # a loaded machine: the check below found no lock, and the second deploy then went first.
+  for _ in $(seq 1 150); do grep -q "SLOW-IN" "$D/slow.out" 2>/dev/null && break; sleep 0.1; done
   [ -d "$D/home/deploy.lock" ] && ok "lock survives acquire" || bad "lock survives acquire"
   "$D/dep.sh" > "$D/fast.out" 2>/dev/null
   wait

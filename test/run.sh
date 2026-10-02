@@ -54,6 +54,12 @@ exits "an unknown check kind fails"                1 node src/plan-gate.mjs "$TM
 # Nothing produced yet is its own exit code — reportable as unbuilt from outside, still non-zero.
 echo '{"source":"x","checks":[{"kind":"files","glob":"dist/*.js","min":1,"quote":"q"}]}' > "$TMP/unbuilt.json"
 exits "an unbuilt lane exits 3, not 0"             3 node src/plan-gate.mjs "$TMP/unbuilt.json" "$TMP"
+# `**/` reaches any depth. Until 0.1.2 the glob rewrote the `.*` it had inserted for `**/` into
+# `[^/]*`, so `src/**/*` stopped one directory down and a banned word three levels deep passed.
+mkdir -p "$TMP/deep/src/a/b"
+echo "uses internal-codename here" > "$TMP/deep/src/a/b/leak.txt"
+echo '{"checks":[{"kind":"forbids","glob":"src/**/*","patterns":["internal-codename"],"quote":"no internal codename"}]}' > "$TMP/deep.json"
+exits "a banned word three directories deep fails"  1 node src/plan-gate.mjs "$TMP/deep.json" "$TMP/deep"
 
 echo "== promote-gate =="
 mkdir -p "$TMP/repo"
